@@ -1,3 +1,9 @@
+//
+//    FILE: oled.ino
+//  AUTHOR: Kyuho Kim (ekyuho@gmail.com)
+// CREATED: September 4, 2017
+// Released to the public domain
+//
 //  https://github.com/squix78/esp8266-oled-ssd1306 
 
 #include "SSD1306.h"

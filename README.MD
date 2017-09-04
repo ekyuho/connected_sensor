@@ -1,6 +1,6 @@
-* Connected Sensor Box
+# Connected Sensor Box
 
-** SDS011 Dust Sensor
-** 0.96" OLED I2C
-** Thing Speak
+* SDS011 Dust Sensor
+* 0.96" OLED I2C
+* Thing Speak
 

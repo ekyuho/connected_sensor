@@ -1,3 +1,9 @@
+//
+//    FILE: dust.ino
+//  AUTHOR: Kyuho Kim (ekyuho@gmail.com)
+// CREATED: September 4, 2017
+// Released to the public domain
+//
 int stat = 1;
 int cnt = 0;
 char buf[10];

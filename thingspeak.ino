@@ -1,3 +1,9 @@
+//
+//    FILE: thingspeak.ino
+//  AUTHOR: Kyuho Kim (ekyuho@gmail.com)
+// CREATED: September 4, 2017
+// Released to the public domain
+//
 const char* host = "api.thingspeak.com";
 String url = "/update?api_key=";  
 const int httpPort = 80;

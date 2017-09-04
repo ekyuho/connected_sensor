@@ -1,3 +1,9 @@
+//
+//    FILE: connected_sensor.ino
+//  AUTHOR: Kyuho Kim (ekyuho@gmail.com)
+// CREATED: September 4, 2017
+// Released to the public domain
+//
 #include <SoftwareSerial.h>
 SoftwareSerial dust(D1, D7, false, 256);
 
@@ -6,7 +12,7 @@ RunningMedian pm25s = RunningMedian(19);
 RunningMedian pm10s = RunningMedian(19);
 
 const int INTERVAL = 60000;
-String MYAPIKEY = "MVBATSXOGBR62YZX";
+String MYAPIKEY = "YOURKEY";
 char* ssid = "cookie"; //"Seoul IOT_2(2.4G)";
 char* password = "0317137263"; //"12345678";
 const int RATIO = 10;

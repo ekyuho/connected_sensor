@@ -1,3 +1,9 @@
+//
+//    FILE: wifi.ino
+//  AUTHOR: Kyuho Kim (ekyuho@gmail.com)
+// CREATED: September 4, 2017
+// Released to the public domain
+//
 #include <ESP8266WiFi.h>
 
 void connect_ap(char* ssid, char* password) {
