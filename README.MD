@@ -12,3 +12,6 @@ D3: Data, D2: Clock
 
 # Platform
 - Tested on WeMos D1 Mini
+
+# Libraries
+- Please install https://github.com/squix78/esp8266-oled-ssd1306 
