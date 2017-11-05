@@ -6,7 +6,8 @@
 //
 #include <ESP8266WiFi.h>
 
-void connect_ap(char* ssid, char* password) {
+boolean connect_ap(char* ssid, char* password) {
+  int count = 60;
   Serial.println();
   Serial.print("connecting to ");
   Serial.println(ssid);
@@ -14,7 +15,13 @@ void connect_ap(char* ssid, char* password) {
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
+    wifi_oled(count);
+    if (!count--) {
+      Serial.print("\nNO WIFI");
+      return(false);
+    }
   }
   Serial.print("\n Got WiFi, IP address: ");
-  Serial.println(WiFi.localIP());  
+  Serial.println(WiFi.localIP()); 
+  return(true);
 }

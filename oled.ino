@@ -14,9 +14,29 @@ void setup_oled() {
   display.init();
   display.clear();  
   display.flipScreenVertically();
-  display.setFont(ArialMT_Plain_16);
-  display.drawString(0,13, "Initializing...");  
+  display.setFont(ArialMT_Plain_10);
+  display.drawString(0,13, "initialize OLED...");  
   display.display();
+}
+
+void wifi_oled(int cnt) {
+  display.clear();  
+  display.setFont(ArialMT_Plain_10);
+  display.drawString(0,13, "waiting wifi..."); 
+  display.drawString(0,24, String("ssid= ")+String(ssid));
+  display.drawString(0,35, String("password= ")+ String(password)); 
+  display.drawString(0,53, String(cnt));
+  display.display();  
+}
+
+void nowifi_oled() {
+  display.clear();  
+  display.setFont(ArialMT_Plain_10);
+  display.drawString(0,0, "NO WIFI: skip wifi..."); 
+  display.drawString(0,13, "waiting dust value..."); 
+  display.drawString(0,24, String("Check dust sensor,"));
+  display.drawString(0,35, String("if you see this message."));
+  display.display();  
 }
 
 bool m = false;
@@ -29,12 +49,12 @@ void do_oled(int pm25, int pm10) {
   if (m) m1 = "*"; else m1 = " ";
   m = m?false:true;  
   display.drawString(123,0, m1);  
+  if (!wifi_ready) display.drawString(0,53, "No WiFi");
   display.drawString(0,0, "pm2.5");
   display.drawString(64,0, "pm10");  
   display.setFont(ArialMT_Plain_24);
   display.drawString(0,13, String(pm25));
   display.drawString(64,13, String(pm10));
-
 
   int vmax = 0;
   int vmin = 999;
