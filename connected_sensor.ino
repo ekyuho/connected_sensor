@@ -2,6 +2,7 @@
 //    FILE: connected_sensor.ino
 //  AUTHOR: Kyuho Kim (ekyuho@gmail.com)
 // CREATED: September 4, 2017
+// Last Modified: November 20, 2017
 // Released to the public domain
 //
 
