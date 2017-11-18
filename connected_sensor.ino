@@ -5,10 +5,11 @@
 // Released to the public domain
 //
 
-String MYAPIKEY = "0D0HNYXTWO10M27Q";
-char* ssid = "GDIP"; //"Seoul IOT_2(2.4G)";
-char* password = "0317137263"; //"12345678";
-const int RATIO = 10;
+
+char* ssid = "YOUR_SSID"; 
+char* password = "YOUR_PASSWORD";
+String MAGICAPIKEY = "";
+String THINGSPEAKAPIKEY = "";
 
 #include <SoftwareSerial.h>
 SoftwareSerial dust(D1, D0, false, 256);
@@ -17,6 +18,7 @@ SoftwareSerial dust(D1, D0, false, 256);
 RunningMedian pm25s = RunningMedian(19);
 RunningMedian pm10s = RunningMedian(19);
 
+const int RATIO = 10;
 const int INTERVAL = 60000;
 boolean wifi_ready;
 
