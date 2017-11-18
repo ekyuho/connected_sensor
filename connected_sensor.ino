@@ -4,6 +4,12 @@
 // CREATED: September 4, 2017
 // Released to the public domain
 //
+
+String MYAPIKEY = "0D0HNYXTWO10M27Q";
+char* ssid = "GDIP"; //"Seoul IOT_2(2.4G)";
+char* password = "0317137263"; //"12345678";
+const int RATIO = 10;
+
 #include <SoftwareSerial.h>
 SoftwareSerial dust(D1, D0, false, 256);
 
@@ -12,20 +18,16 @@ RunningMedian pm25s = RunningMedian(19);
 RunningMedian pm10s = RunningMedian(19);
 
 const int INTERVAL = 60000;
-String MYAPIKEY = "0D0HNYXTWO10M27Q";
-char* ssid = "GDIP"; //"Seoul IOT_2(2.4G)";
-char* password = "0317137263"; //"12345678";
-const int RATIO = 10;
 boolean wifi_ready;
 
 void setup() {
-  Serial.begin(74880);
+  Serial.begin(115200);
   dust.begin(9600);
   setup_oled();
   wifi_ready = connect_ap(ssid, password);
   if (!wifi_ready) nowifi_oled();
 
-  Serial.println("\nDust Sensor Box V1.0, 2017/9/4 Kyuho Kim");
+  Serial.println("\nDust Sensor Box V2.0, 2017/11/20 Kyuho Kim");
 }
 
 void got_dust(int pm25, int pm10) {
@@ -40,7 +42,10 @@ void got_dust(int pm25, int pm10) {
 }
 
 void do_interval() {
-  if (wifi_ready) do_thingspeak(MYAPIKEY, int(pm25s.getMedian()), int(pm10s.getMedian()));
+  if (wifi_ready) return;
+  
+  do_thingspeak(MYAPIKEY, int(pm25s.getMedian()), int(pm10s.getMedian()));
+  do_magiceco(MYAPIKEY, int(pm25s.getMedian()), int(pm10s.getMedian()));
 }
 
 unsigned long mark = 0;
