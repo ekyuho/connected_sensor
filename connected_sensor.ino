@@ -45,9 +45,10 @@ void got_dust(int pm25, int pm10) {
 
 void do_interval() {
   if (wifi_ready) return;
-  
-  do_thingspeak(MYAPIKEY, int(pm25s.getMedian()), int(pm10s.getMedian()));
-  do_magiceco(MYAPIKEY, int(pm25s.getMedian()), int(pm10s.getMedian()));
+
+  do_magiceco(MAGICAPIKEY, int(pm25s.getMedian()), int(pm10s.getMedian()));
+  do_thingspeak(THINGSPEAKAPIKEY, int(pm25s.getMedian()), int(pm10s.getMedian()));
+
 }
 
 unsigned long mark = 0;
