@@ -5,7 +5,7 @@
 // Released to the public domain
 //
 #include <SoftwareSerial.h>
-SoftwareSerial dust(D1, D7, false, 256);
+SoftwareSerial dust(D1, D0, false, 256);
 
 #include "RunningMedian.h"
 RunningMedian pm25s = RunningMedian(19);
