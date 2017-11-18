@@ -12,12 +12,13 @@ const int httpPort = 80;
 #include <WiFiClient.h>
 
 void do_magic(String APIKEY, int pm25, int pm10) {
-  do_server(APIKEY, pm25, pm10, 0.0)
+  do_magic(APIKEY, pm25, pm10, 0.0)
 }
 
 void do_magic(String APIKEY, int pm25, int pm10, float temperature) { 
   WiFiClient client;
 
+  if (APIKEY == String("")) return;
   if (!client.connect(host, httpPort)) {
     Serial.print("connection failed: ");
     return;
