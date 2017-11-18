@@ -7,7 +7,7 @@
 //  https://github.com/squix78/esp8266-oled-ssd1306 
 
 #include "SSD1306.h"
-SSD1306  display(0x3c, D3, D2);  //Data, Clock
+SSD1306  display(0x3c, D3, D5);  //Data, Clock
 
 
 void setup_oled() {
