@@ -14,6 +14,8 @@ const int httpPort = 80;
 void do_thingspeak(String APIKEY, int pm25, int pm10) { 
   WiFiClient client;
 
+  if (APIKEY == String("")) return;
+  
   if (!client.connect(host, httpPort)) {
     Serial.print("connection failed: ");
     return;
