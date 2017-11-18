@@ -8,8 +8,8 @@
 
 char* ssid = "YOUR_SSID"; 
 char* password = "YOUR_PASSWORD";
-String MAGICAPIKEY = "";
-String THINGSPEAKAPIKEY = "";
+String MAGICAPIKEY = "";   // with no key, no data will be stored.
+String THINGSPEAKAPIKEY = "";   // with no key, no data will be stored.
 
 #include <SoftwareSerial.h>
 SoftwareSerial dust(D1, D0, false, 256);
