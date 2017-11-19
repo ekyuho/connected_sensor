@@ -5,12 +5,10 @@
 // Released to the public domain
 //
 //  https://github.com/squix78/esp8266-oled-ssd1306 
-
 #include "SSD1306.h"
 SSD1306  display(0x3c, D3, D5);  //Data, Clock
 
-
-void setup_oled() {
+void oled_setup() {
   display.init();
   display.clear();  
   display.flipScreenVertically();
@@ -19,7 +17,7 @@ void setup_oled() {
   display.display();
 }
 
-void wifi_oled(int cnt) {
+void oled_wifi_going(int cnt, char* ssid, char* password) {
   display.clear();  
   display.setFont(ArialMT_Plain_10);
   display.drawString(0,13, "waiting wifi..."); 
@@ -29,7 +27,7 @@ void wifi_oled(int cnt) {
   display.display();  
 }
 
-void nowifi_oled() {
+void oled_no_wifi() {
   display.clear();  
   display.setFont(ArialMT_Plain_10);
   display.drawString(0,0, "NO WIFI: skip wifi..."); 
@@ -39,10 +37,18 @@ void nowifi_oled() {
   display.display();  
 }
 
+void oled_waiting_dust(int cnt) {
+  display.clear();  
+  display.setFont(ArialMT_Plain_10);
+  display.drawString(0,13, "waiting dust sensor..."); 
+  display.drawString(0,53, String(cnt));
+  display.display();  
+}
+
 bool m = false;
 int v1[128], v2[128];
 
-void do_oled(int pm25, int pm10) {
+void oled_show(int pm25, int pm10, bool wifi_ready) {
   String m1;
   display.clear();  
   display.setFont(ArialMT_Plain_10);

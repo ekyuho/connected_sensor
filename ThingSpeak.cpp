@@ -4,28 +4,31 @@
 // CREATED: September 4, 2017
 // Released to the public domain
 //
-const char* host = "api.thingspeak.com";
-String url = "/update?api_key=";  
-const int httpPort = 80;
-
+#include "ThingSpeak.h"
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 
-void do_thingspeak(String APIKEY, int pm25, int pm10) { 
+ThingSpeak::ThingSpeak(String apikey) {
+    _apikey = apikey;
+    _host = "api.thingspeak.com";
+    _url = "/update?api_key=";  
+    _httpPort = 80;
+}
+boolean ThingSpeak::send(int pm25, int pm10) { 
   WiFiClient client;
 
-  if (APIKEY == String("")) return;
+  if (_apikey == String("")) return(false);
   
-  if (!client.connect(host, httpPort)) {
+  if (!client.connect(_host, _httpPort)) {
     Serial.print("connection failed: ");
-    return;
+    return(false);
   }
 
   String payload = "field1="+ String(pm25) +"&field2="+ String(pm10);
-  String getheader = "GET "+ String(url) + String(APIKEY)+ "&"+ payload +" HTTP/1.1";
+  String getheader = String("GET ")+ _url + _apikey + "&"+ payload +" HTTP/1.1";
   client.println(getheader);
   client.println("User-Agent: ESP8266 Kyuho Kim");  
-  client.println("Host: " + String(host));  
+  client.println("Host: " + String(_host));  
   client.println("Connection: close");  
   client.println();
 
@@ -35,6 +38,7 @@ void do_thingspeak(String APIKEY, int pm25, int pm10) {
     Serial.println(line);
   }
   Serial.println("Done Thingspeak.");
+  return(true);
 }
 
 

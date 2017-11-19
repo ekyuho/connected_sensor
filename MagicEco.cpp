@@ -4,31 +4,36 @@
 // CREATED: November 20, 2017
 // Released to the public domain
 //
-const char* host = "airstatus.magice.co";
-String url = "/api/update?api_key=";  
-const int httpPort = 80;
-
+#include "MagicEco.h"
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 
-void do_magic(String APIKEY, int pm25, int pm10) {
-  do_magic(APIKEY, pm25, pm10, 0.0)
+MagicEco::MagicEco(String apikey) {
+    _apikey = apikey;
+    _host = "airstatus.magice.co";
+    _url = "/api/update?api_key=";  
+    _httpPort = 80;
 }
 
-void do_magic(String APIKEY, int pm25, int pm10, float temperature) { 
+boolean MagicEco::send(int pm25, int pm10) {
+  return(send(pm25, pm10, float(0.0)));
+}
+
+boolean MagicEco::send(int pm25, int pm10, float temperature) { 
   WiFiClient client;
 
-  if (APIKEY == String("")) return;
-  if (!client.connect(host, httpPort)) {
+  if (_apikey == String("")) return(false);
+  
+  if (!client.connect(_host, _httpPort)) {
     Serial.print("connection failed: ");
-    return;
+    return(false);
   }
 
   String payload = "pm25="+ String(pm25) +"&pm10="+ String(pm10)+"&temperature="+ String(temperature);
-  String getheader = "GET "+ String(url) + String(APIKEY)+ "&"+ payload +" HTTP/1.1";
+  String getheader = "GET "+ String(_url) + String(_apikey)+ "&"+ payload +" HTTP/1.1";
   client.println(getheader);
   client.println("User-Agent: ESP8266 Kyuho Kim");  
-  client.println("Host: " + String(host));  
+  client.println("Host: " + String(_host));  
   client.println("Connection: close");  
   client.println();
 
@@ -37,5 +42,7 @@ void do_magic(String APIKEY, int pm25, int pm10, float temperature) {
     String line = client.readStringUntil('\n');
     Serial.println(line);
   }
-  Serial.println("Send to Server.");
+  Serial.println("Done Magic.");
 }
+
+

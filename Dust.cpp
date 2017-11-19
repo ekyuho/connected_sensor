@@ -4,11 +4,9 @@
 // CREATED: September 4, 2017
 // Released to the public domain
 //
-int stat = 1;
-int cnt = 0;
-char buf[10];
+#include "Dust.h"
 
-void do_dust(char c, void (*function)(int, int)) {
+void Dust::do_char(char c, void (*function)(int, int)) {
     //Serial.print("stat="+ String(stat) +", "+ "cnt="+ String(cnt) +" ");
     //Serial.print(c, HEX);
     //Serial.println(" ");
