@@ -13,10 +13,13 @@ class MyWifi
 {
   public:
     MyWifi(String, String);
-  	MyWifi(String);
-	  void connect_ap(void);
+    MyWifi(String);
+    void connect_ap(void);
     boolean connected;   
+    String macstring(void);
     char ssid[32];
     char password[32];
+  private:
+    String _macstring;
 };
 #endif

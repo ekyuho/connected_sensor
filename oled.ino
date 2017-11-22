@@ -32,15 +32,15 @@ void oled_no_wifi() {
   display.setFont(ArialMT_Plain_10);
   display.drawString(0,0, "NO WIFI: skip wifi..."); 
   display.drawString(0,13, "waiting dust value..."); 
-  display.drawString(0,24, String("Check dust sensor,"));
-  display.drawString(0,35, String("if you see this message."));
+  display.drawString(0,24, String("check sensor wiring."));
   display.display();  
 }
 
 void oled_waiting_dust(int cnt) {
   display.clear();  
   display.setFont(ArialMT_Plain_10);
-  display.drawString(0,13, "waiting dust sensor..."); 
+  display.drawString(0,0, "NO SENSOR: ...");   
+  display.drawString(0,13, "check sensor wiring"); 
   display.drawString(0,53, String(cnt));
   display.display();  
 }
@@ -48,14 +48,14 @@ void oled_waiting_dust(int cnt) {
 bool m = false;
 int v1[128], v2[128];
 
-void oled_show(int pm25, int pm10, bool wifi_ready) {
+void oled_show(int pm25, int pm10, String msg) {
   String m1;
   display.clear();  
   display.setFont(ArialMT_Plain_10);
   if (m) m1 = "*"; else m1 = " ";
   m = m?false:true;  
   display.drawString(123,0, m1);  
-  if (!wifi_ready) display.drawString(0,53, "No WiFi");
+  if (msg) display.drawString(0,53, msg);
   display.drawString(0,0, "pm2.5");
   display.drawString(64,0, "pm10");  
   display.setFont(ArialMT_Plain_24);

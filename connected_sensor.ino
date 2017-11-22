@@ -5,14 +5,17 @@
 // Last Modified: November 20, 2017
 // Released to the public domain
 //
-#include "ThingSpeak.h"
-ThingSpeak ts("0D0HNYXTWO10M27Q"); // with no key, no data will be stored.
+#include "MyWifi.h"
+MyWifi mywifi("cookie", "0317137263");
 
 #include "MagicEco.h"
 MagicEco me("5a104e049d7c7482f830351f"); // with no key, no data will be stored.
 
-#include "MyWifi.h"
-MyWifi mywifi("cookie", "0317137263");
+#include "ThingSpeak.h"
+ThingSpeak ts("0D0HNYXTWO10M27Q"); // with no key, no data will be stored.
+
+#include "Sogang.h"
+Sogang sg; 
 
 #include <SoftwareSerial.h>
 SoftwareSerial dustport(D1, D0, false, 256);  //RX, TX
@@ -29,28 +32,38 @@ RunningMedian pm10s = RunningMedian(19);
 
 const int RATIO = 10;
 const int INTERVAL = 60000;
+unsigned MYMIN = 0;
+unsigned MYSEC = 0;
 
 void setup() {
   Serial.begin(115200);
   dustport.begin(9600);
-
   oled_setup();
+
+  Serial.println("\n\nDust Sensor Box V2.0, 2017/11/20 by Valve God");
+  Serial.print("\nConnect WiFi AP: ");
   mywifi.connect_ap();
   if (!mywifi.connected) oled_no_wifi();
+  sg.setapikey(mywifi.macstring());
 
-  Serial.println("\nDust Sensor Box V2.0, 2017/11/20 Kyuho Kim");
+  Serial.println("Receiving Sensor Data: ");
 }
 
 void got_dust(int pm25, int pm10) {
    pm25 /= RATIO;
    pm10 /= RATIO;
-   //Serial.println(String(pm25) +","+ String(pm10)+ "  ");
+
+   Serial.print(String(MYMIN)+"M "+ String(MYSEC) +"S, [pm25, pm10]=[");
+   Serial.println(String(pm25) +", "+ String(pm10)+ "]");
    pm25s.add(pm25);
    pm10s.add(pm10);
    //Serial.println("pm25 size="+ String(pm25s.getSize()) +", count="+ String(pm25s.getCount()) +", median="+ String(pm25s.getMedian()));
    //Serial.println("pm10 size="+ String(pm10s.getSize()) +", count="+ String(pm10s.getCount()) +", median="+ String(pm10s.getMedian()));
-   void oled_show(int, int, bool);   
-   oled_show(pm25, pm10, mywifi.connected);
+
+   String msg = "";
+   if (!mywifi.connected) msg = "NO WIFI";
+   void oled_show(int, int, String);   
+   oled_show(pm25, pm10, msg);
 }
 
 void do_interval() {
@@ -58,6 +71,7 @@ void do_interval() {
 
   me.send(int(pm25s.getMedian()), int(pm10s.getMedian()));
   ts.send(int(pm25s.getMedian()), int(pm10s.getMedian()));
+  sg.send(int(pm25s.getMedian()), int(pm10s.getMedian()));
 }
 
 unsigned long mark = 0, sec_mark = 0;
@@ -72,7 +86,7 @@ void loop() {
     got_interval = true;
   }
   if (current > sec_mark) {
-    sec_mark = current + 3000;
+    sec_mark = current + 1000;
     got_sec = true;
     missings++;
   }
@@ -87,7 +101,13 @@ void loop() {
   }
   if (got_sec) {
     got_sec = false;
-    if (missings > 3) oled_waiting_dust(missings);
+    MYMIN = (current/1000) / 60;
+    MYSEC = (current/1000) % 60;
+    
+    if (missings > 15) {
+      oled_waiting_dust(missings);
+      Serial.println(String(MYMIN)+"M "+ String(MYSEC) +"S: No data from dust sensor. check wiring.");
+    }
   }
   yield();
 }

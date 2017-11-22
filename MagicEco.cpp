@@ -22,7 +22,10 @@ boolean MagicEco::send(int pm25, int pm10) {
 boolean MagicEco::send(int pm25, int pm10, float temperature) { 
   WiFiClient client;
 
-  if (_apikey == String("")) return(false);
+  if (_apikey == String("YOUR_MAGICECO_KEY")) {
+    Serial.println("PLEASE SETUP YOUR OWN MAGIC ECO API KEY");
+    return(false);
+  }
   
   if (!client.connect(_host, _httpPort)) {
     Serial.print("connection failed: ");

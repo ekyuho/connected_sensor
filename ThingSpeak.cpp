@@ -17,8 +17,11 @@ ThingSpeak::ThingSpeak(String apikey) {
 boolean ThingSpeak::send(int pm25, int pm10) { 
   WiFiClient client;
 
-  if (_apikey == String("")) return(false);
-  
+  if (_apikey == String("YOUR_THINGSPEAK_KEY")) {
+    Serial.println("PLEASE SETUP YOUR OWN THINGSPEAK API KEY");
+    return(false);
+  }
+
   if (!client.connect(_host, _httpPort)) {
     Serial.print("connection failed: ");
     return(false);
