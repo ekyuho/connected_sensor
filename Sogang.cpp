@@ -9,7 +9,7 @@
 #include <WiFiClient.h>
 
 Sogang::Sogang(void) {
-    _host = "61.74.178.129";
+    _host = "t.damoa.io";
     _url = "/sendcloud?";  
     _httpPort = 8080;
 }
