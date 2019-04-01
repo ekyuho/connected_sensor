@@ -2,17 +2,14 @@
 //    FILE: connected_sensor.ino
 //  AUTHOR: Kyuho Kim (ekyuho@gmail.com)
 // CREATED: September 4, 2017
-// Last Modified: November 20, 2017
+// Last Modified: April 1, 2019
 // Released to the public domain
 //
 #include "MyWifi.h"
 MyWifi mywifi("cookie", "0317137263");
 
-#include "MagicEco.h"
-MagicEco me("5a104e049d7c7482f830351f"); // with no key, no data will be stored.
-
 #include "ThingSpeak.h"
-ThingSpeak ts("0D0HNYXTWO10M27Q"); // with no key, no data will be stored.
+ThingSpeak ts("YourKeyPlease"); // with no key, no data will be stored.
 
 #include "Sogang.h"
 Sogang sg; 
@@ -40,7 +37,7 @@ void setup() {
   dustport.begin(9600);
   oled_setup();
 
-  Serial.println("\n\nDust Sensor Box V2.0, 2017/11/20 by Valve God");
+  Serial.println("\n\nDust Sensor Box V2.1, 2019/4/1 by Valve God, Kyuho Kim");
   Serial.print("\nConnect WiFi AP: ");
   mywifi.connect_ap();
   if (!mywifi.connected) oled_no_wifi();
@@ -69,7 +66,6 @@ void got_dust(int pm25, int pm10) {
 void do_interval() {
   if (!mywifi.connected) return;
 
-  me.send(int(pm25s.getMedian()), int(pm10s.getMedian()));
   ts.send(int(pm25s.getMedian()), int(pm10s.getMedian()));
   sg.send(int(pm25s.getMedian()), int(pm10s.getMedian()));
 }
