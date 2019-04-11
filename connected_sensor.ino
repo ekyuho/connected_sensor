@@ -9,16 +9,17 @@
 MyWifi mywifi("cookie", "0317137263");
 
 #include "ThingSpeak.h"
-ThingSpeak ts("YourKeyPlease"); // with no key, no data will be stored.
+#define THINGSPEAKKEY "YourKeyPlease"
+ThingSpeak ts(THINGSPEAKKEY); // with no key, no data will be stored.
 
 #include "Sogang.h"
 Sogang sg; 
 
 #include <SoftwareSerial.h>
-SoftwareSerial dustport(D1, D0, false, 256);  //RX, TX
+SoftwareSerial dustport(D4, D0, false, 256);  //RX, TX
 
 // At Oled.ino
-//SSD1306  display(0x3c, D3, D5);  //Data, Clock
+//SSD1306  display(0x3c, D3, D2);  //Data, Clock
 
 #include "Dust.h"
 Dust dust;
@@ -27,7 +28,7 @@ Dust dust;
 RunningMedian pm25s = RunningMedian(19);
 RunningMedian pm10s = RunningMedian(19);
 
-const int RATIO = 10;
+const int RATIO = 1;
 const int INTERVAL = 60000;
 unsigned MYMIN = 0;
 unsigned MYSEC = 0;
@@ -65,8 +66,7 @@ void got_dust(int pm25, int pm10) {
 
 void do_interval() {
   if (!mywifi.connected) return;
-
-  ts.send(int(pm25s.getMedian()), int(pm10s.getMedian()));
+  if (THINGSPEAKKEY != "YourKeyPlease") ts.send(int(pm25s.getMedian()), int(pm10s.getMedian()));
   sg.send(int(pm25s.getMedian()), int(pm10s.getMedian()));
 }
 

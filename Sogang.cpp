@@ -10,7 +10,7 @@
 
 Sogang::Sogang(void) {
     _host = "t.damoa.io";
-    _url = "/sendcloud?";  
+    _url = "/add?";  
     _httpPort = 8080;
 }
 
@@ -41,5 +41,3 @@ boolean Sogang::send(int pm25, int pm10) {
   }
   Serial.println("Done Sogang.");
 }
-
-
