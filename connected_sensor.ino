@@ -6,7 +6,7 @@
 // Released to the public domain
 //
 #include "MyWifi.h"
-MyWifi mywifi("cookie", "0317137263");
+MyWifi mywifi("KT_GiGA_2G_4A44", "3eb40ie803");
 
 #include "ThingSpeak.h"
 #define THINGSPEAKKEY "YourKeyPlease"
