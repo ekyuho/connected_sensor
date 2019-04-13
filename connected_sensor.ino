@@ -16,7 +16,7 @@ ThingSpeak ts(THINGSPEAKKEY); // with no key, no data will be stored.
 Sogang sg; 
 
 #include <SoftwareSerial.h>
-SoftwareSerial dustport(D4, D0, false, 256);  //RX, TX
+SoftwareSerial dustport(D1, D0, false, 256);  //RX, TX
 
 // At Oled.ino
 //SSD1306  display(0x3c, D3, D2);  //Data, Clock

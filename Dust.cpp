@@ -5,7 +5,7 @@
 // Released to the public domain
 //
 #include "Dust.h"
-#define PMSA003
+#define SDS011
 
 #ifdef SDS011
 void Dust::do_char(char c, void (*function)(int, int)) {
