@@ -6,7 +6,7 @@
 // Released to the public domain
 //
 #include "MyWifi.h"
-MyWifi mywifi("KT_GiGA_2G_4A44", "3eb40ie803");
+MyWifi mywifi("cookie", "0317137263");
 
 #include "ThingSpeak.h"
 #define THINGSPEAKKEY "YourKeyPlease"
@@ -28,7 +28,7 @@ Dust dust;
 RunningMedian pm25s = RunningMedian(19);
 RunningMedian pm10s = RunningMedian(19);
 
-const int RATIO = 1;
+const int RATIO = 10;
 const int INTERVAL = 60000;
 unsigned MYMIN = 0;
 unsigned MYSEC = 0;
