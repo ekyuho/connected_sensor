@@ -13,12 +13,14 @@ ThingSpeak::ThingSpeak(String apikey) {
     _host = "api.thingspeak.com";
     _url = "/update?api_key=";  
     _httpPort = 80;
+    first = true;
 }
 boolean ThingSpeak::send(int pm25, int pm10) { 
   WiFiClient client;
 
-  if (_apikey == String("YOUR_THINGSPEAK_KEY")) {
-    Serial.println("PLEASE SETUP YOUR OWN THINGSPEAK API KEY");
+  if (_apikey == String("YOUR_THINGSPEAK_KEY") || _apikey == "") {
+    if (first) Serial.println("PLEASE SETUP YOUR OWN THINGSPEAK API KEY");
+    first = false;
     return(false);
   }
 
@@ -40,8 +42,5 @@ boolean ThingSpeak::send(int pm25, int pm10) {
     String line = client.readStringUntil('\n');
     Serial.println(line);
   }
-  Serial.println("Done Thingspeak.");
   return(true);
 }
-
-

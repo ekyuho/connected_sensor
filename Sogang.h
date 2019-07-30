@@ -14,7 +14,8 @@ class Sogang
   public:
     Sogang(void);
     void setapikey(String);
-    boolean send(int, int); // type, value, seq
+	int user;
+    String send(int, int); // type, value, seq
   private:
     String _apikey;
     String _url;

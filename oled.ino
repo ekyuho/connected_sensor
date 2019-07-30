@@ -6,7 +6,7 @@
 //
 //  https://github.com/squix78/esp8266-oled-ssd1306 
 #include "SSD1306.h"
-SSD1306  display(0x3c, D3, D5);  //Data, Clock
+SSD1306  display(0x3c, D3, D2);  //Data, Clock
 
 void oled_setup() {
   display.init();
@@ -49,18 +49,14 @@ bool m = false;
 int v1[128], v2[128];
 
 void oled_show(int pm25, int pm10, String msg) {
-  String m1;
   display.clear();  
   display.setFont(ArialMT_Plain_10);
-  if (m) m1 = "*"; else m1 = " ";
-  m = m?false:true;  
-  display.drawString(123,0, m1);  
-  if (msg) display.drawString(0,53, msg);
+  if (msg) display.drawString(127-display.getStringWidth(msg), 0, msg);
   display.drawString(0,0, "pm2.5");
-  display.drawString(64,0, "pm10");  
+  display.drawString(48,0, "pm10");  
   display.setFont(ArialMT_Plain_24);
   display.drawString(0,13, String(pm25));
-  display.drawString(64,13, String(pm10));
+  display.drawString(48,13, String(pm10));
 
   int vmax = 0;
   int vmin = 999;
