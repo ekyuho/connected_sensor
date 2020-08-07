@@ -2,7 +2,7 @@
 //    FILE: connected_sensor.ino
 //  AUTHOR: Kyuho Kim (ekyuho@gmail.com)
 // CREATED: September 4, 2017
-// Last Modified: July 27, 2019
+// Last Modified: August 7, 2020
 // Released to the public domain
 //
 #include "MyWifi.h"
@@ -15,8 +15,12 @@ ThingSpeak ts(THINGSPEAKKEY); // with no key, no data will be stored.
 #include "Sogang.h"
 Sogang sg; 
 
+#ifdef ESP32
+HardwareSerial dustport(2); //RX:16, TX:17
+#else
 #include <SoftwareSerial.h>
 SoftwareSerial dustport(D4, D0, false, 256);  //RX, TX
+#endif
 
 #include "Dust.h"
 Dust dust;
