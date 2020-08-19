@@ -4,9 +4,14 @@
 ```
 D1: TX of SDS011
 ```
+- PMS A003 Dust Sensor
+```
+GPIO2: TX of PMS A003
+```
 - 0.96" OLED I2C
 ```
-D3: Data, D5: Clock
+D3: Data, D5: Clock for WeMos D1 Mini
+GPIO18: Data, GPIO19: Clock for ESP32
 ```
 - Thing Speak
 
