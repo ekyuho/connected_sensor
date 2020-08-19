@@ -16,7 +16,7 @@ ThingSpeak ts(THINGSPEAKKEY); // with no key, no data will be stored.
 Sogang sg; 
 
 #ifdef ESP32
-HardwareSerial dustport(1); // ESP32 RX:2(TX of Dust Sensor), TX:4
+HardwareSerial dustport(1); // ESP32 RX:13(TX of Dust Sensor)
 #else
 #include <SoftwareSerial.h>
 SoftwareSerial dustport(D4, D0, false);  //RX, TX
@@ -28,6 +28,9 @@ Dust dust;
 #include "RunningMedian.h"
 RunningMedian pm25s = RunningMedian(19);
 RunningMedian pm10s = RunningMedian(19);
+
+#define ON digitalWrite(2, HIGH)
+#define OFF digitalWrite(2, LOW)
 
 // D4:RX, D3:Data, D2: CLOCK
 const int INTERVAL = 60000;
@@ -82,54 +85,54 @@ void got_cmd() {
 }
 
 void setup() {
-  Serial.begin(115200);
-  dustport.begin(9600, SERIAL_8N1, 2, 4);
-  
-  Serial.println("\n\nDust Sensor Box V2.1, 2020/8/19 by Valve God, Kyuho Kim");  
-  oled_setup();
+	Serial.begin(115200);
+	dustport.begin(9600, SERIAL_8N1, 13, 5);
+	pinMode(2, OUTPUT);
 
-  mywifi.begin();
-  mywifi.connect_ap();
+	Serial.println("\n\nDust Sensor Box V2.1, 2020/8/19 by Valve God, Kyuho Kim");  
+	oled_setup();
 
-  Serial.println("Ready to receive sensor data. ");
-  mark = millis() + 10000;
+	mywifi.begin();
+	if (mywifi.connect_ap()) Serial.println("Ready to receive sensor data. ");
 }
   
 void loop() {
-  unsigned long current = millis();
-  
-  if (current > mark) {
-    mark = current + INTERVAL;
-    got_interval = true;
-    tick = 1;
-  }
-  if (current > sec_mark) {
-    sec_mark = current + 1000;
-    got_sec = true;
-    missings++;
-  }
-  while (dustport.available() > 0) {
-    dust.do_char(dustport.read(), got_dust);
-    missings = 0;
-    yield();
-  }
-  if (got_interval) {
-    got_interval = false;
-    do_interval();
-  }
-  if (got_sec) {
-    got_sec = false;
+	unsigned long current = millis();
+
+	if (current > mark) {
+		mark = current + INTERVAL;
+		got_interval = true;
+		tick = 1;
+	}
+	if (current > sec_mark) {
+		sec_mark = current + 1000;
+		got_sec = true;
+		missings++;
+	}
+	while (dustport.available() > 0) {
+		ON;
+		dust.do_char(dustport.read(), got_dust);
+		OFF;
+		missings = 0;
+		yield();
+	}
+	if (got_interval) {
+		got_interval = false;
+		do_interval();
+	}
+	if (got_sec) {
+		got_sec = false;
     
-    if (missings > 5) {
-      oled_waiting_dust(missings);
-      Serial.printf("No data from dust sensor. check wiring.\n");
-    }
-  }
+		if (missings > 5) {
+			oled_waiting_dust(missings);
+			Serial.printf("No data from dust sensor. check wiring.\n");
+		}
+	}
   
-  while (Serial.available()) {
-	char c = Serial.read();
-	if (c == '\n' || c == '\r') got_cmd();
-	else cmd += String(c);
-  }
-  yield();
+	while (Serial.available()) {
+		char c = Serial.read();
+		if (c == '\n' || c == '\r') got_cmd();
+		else cmd += String(c);
+	}
+	yield();
 }

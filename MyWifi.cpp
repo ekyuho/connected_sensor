@@ -51,7 +51,7 @@ void MyWifi::configure(String cmd) {
 		EEPROM.write(i, cmd.charAt(i));
 	EEPROM.write(cmd.length(), 0);
 	EEPROM.commit();
-  ESP.restart();
+	ESP.restart();
 }
 
 void MyWifi::parse(String cmd) {
@@ -76,7 +76,7 @@ bool MyWifi::isConnected(void) {
 }
 
 bool MyWifi::connect_ap() {
-  if (WiFi.status() == WL_CONNECTED) return "";
+  if (WiFi.status() == WL_CONNECTED) return true;
 
   scan();
   int count = 30;
@@ -92,6 +92,7 @@ bool MyWifi::connect_ap() {
       return false;
     }
   }
-  Serial.println("............");
+  Serial.printf("............\nConnected as ");
+  Serial.println(WiFi.localIP());
   return true;
 }
