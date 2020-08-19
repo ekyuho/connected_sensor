@@ -5,8 +5,8 @@
 // Released to the public domain
 //
 #include "Dust.h"
-#define SDS011
-//#define PMSX003  
+//#define SDS011
+#define PMSX003  
 
 #ifdef SDS011
 byte header[2] = { 0xAA, 0xC0 };

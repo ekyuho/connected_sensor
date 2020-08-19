@@ -7,23 +7,22 @@
 #ifndef MyWifi_h
 #define MyWifi_h
 
-#include "Arduino.h"
+#include "Sogang.h"
 
 class MyWifi 
 {
   public:
     MyWifi(void);
   	void begin(void);
-  	bool configure(String);
+  	void configure(String);
     bool connect_ap(void);
-    bool connected;
     bool tcp;
     bool ack;
-    String macstring(void);
     char ssid[32];
     char password[32];
+    void print(Sogang*);
+	bool isConnected(void);
   private:
-    String _macstring;
 	void parse(String);
 	void scan(void);
 };

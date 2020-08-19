@@ -5,54 +5,52 @@
 // Released to the public domain
 //
 #include "Sogang.h"
-#include <ESP8266WiFi.h>
-#include <WiFiClient.h>
+#include <HTTPClient.h>
 
 Sogang::Sogang(void) {
-    _host = "t.damoa.io";
-    _url = "/add?";  
-    _httpPort = 8080;
+    _url = "http://t.damoa.io:8080/add?";  
 	user = 0;
-}
-
-void Sogang::setapikey(String apikey) {
-    _apikey = apikey;
+	apikey = "";
 }
 
 String Sogang::send(int pm25, int pm10) {
-  WiFiClient client;
+	HTTPClient http;
 
-  if (!client.connect(_host, _httpPort)) {
-    Serial.printf("opening TCP failed: %s:%d\n", _host, _httpPort);
-    return("no TCP");
-  }
+	byte mac[6];
+	char macStr[18] = {0};
+	if (apikey == "") {
+		WiFi.macAddress(mac);
+		sprintf(macStr, "%02x%02x%02x%02x%02x%02x", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+		apikey = String(macStr);
+	}
 
-  String payload = "format=4&macapikey="+ _apikey +"&type=D&value="+ String(pm25)+","+ String(pm10) +"&seq="+ String(_seq++);
-  String getheader = "GET "+ String(_url) + String()+ "&"+ payload +" HTTP/1.1";
-  client.println(getheader);
-  client.println("User-Agent: ESP8266 Kyuho Kim");  
-  client.println("Host: " + String(_host));  
-  client.println("Connection: close");  
-  client.println();
+	String payload = "format=4&macapikey="+ apikey +"&type=D&value="+ String(pm25)+","+ String(pm10) +"&seq="+ String(_seq++);
+	String s = _url + payload;
 
-  Serial.println(getheader);
-  int cnt = 1;
-  bool ack = false;
-  while (client.connected()||client.available()) {
-    String line = client.readStringUntil('\n');
-    Serial.printf("%d: %s\n", cnt++, line.c_str());
-  	if (line.startsWith("X-ACK:")) {
-      ack = true;
-  		String u_s = line.substring(8, 11);
-  		String user_s = line.substring(13, 19);
-  		if (u_s != "\"u\"") {
-  			Serial.println("Format Error: "+ line);
-  		} else {
-  			user = atoi(user_s.c_str());
-  		}
-  	}
-  }
-  client.stop();
+    Serial.println(s);
+	http.begin(s);
+
+	int httpCode = http.GET();
+	String line;
+	if(httpCode == HTTP_CODE_OK) {
+		line = http.getString();
+		Serial.println(line);
+	}
+	http.end();
+	
+	bool ack = false;
+	if (line.startsWith("X-ACK:")) {
+		ack = true;
+		String u_s = line.substring(8, 11);
+		String user_s = line.substring(13, 19);
+		if (u_s != "\"u\"") {
+			Serial.println("Format Error: "+ line);
+		} else {
+			user = atoi(user_s.c_str());
+		}
+	}
+
+
   if (!ack) return "no ACK";
   return "";
 }

@@ -13,11 +13,10 @@ class Sogang
 {
   public:
     Sogang(void);
-    void setapikey(String);
 	int user;
     String send(int, int); // type, value, seq
+    String apikey;
   private:
-    String _apikey;
     String _url;
     char* _host;
     int _httpPort;   

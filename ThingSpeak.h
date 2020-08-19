@@ -11,8 +11,5 @@ class ThingSpeak
   private:
 	String _apikey = "";
 	String _url;
-	char* _host;
-	int _httpPort;
-  bool first;
 };
 #endif

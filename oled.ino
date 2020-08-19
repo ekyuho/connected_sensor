@@ -6,6 +6,10 @@
 //
 //  https://github.com/squix78/esp8266-oled-ssd1306 
 #include "SSD1306.h"
+#ifdef ESP32
+#define D3 18
+#define D2 19
+#endif
 SSD1306  display(0x3c, D3, D2);  //Data, Clock
 
 void oled_setup() {
