@@ -17,6 +17,8 @@ Sogang sg;
 
 #ifdef ESP32
 HardwareSerial dustport(1); // ESP32 RX:13(TX of Dust Sensor)
+#define DUSTRX 13
+#define DUSTTX 5
 #else
 #include <SoftwareSerial.h>
 SoftwareSerial dustport(D4, D0, false);  //RX, TX
@@ -32,12 +34,13 @@ RunningMedian pm10s = RunningMedian(19);
 #define ON digitalWrite(2, HIGH)
 #define OFF digitalWrite(2, LOW)
 
-// D4:RX, D3:Data, D2: CLOCK
+// "96 OLED
+// D4:RX, D3:Data, D2: CLOCK, 
+// 14:Data, 17:CLock for ESP32
 const int INTERVAL = 60000;
 String cmd = "";
 int tick = 1;
 unsigned long mark = 0, sec_mark = 0;
-boolean got_interval = false, got_sec = false;
 unsigned long missings = 0;
 void oled_show(int, int, String);  
 
@@ -57,13 +60,15 @@ void got_dust(int pm25, int pm10) {
 }
 
 void do_interval() {
-	if (!mywifi.connect_ap()) return;
+	mywifi.connect_ap();
 
 	int pm25 = int(pm25s.getMedian());
 	int pm10 = int(pm10s.getMedian());
 	if (pm25 > 999 || pm10>999) {
-		Serial.println("dust value ?");
-		return;
+		Serial.print("dust value ?");
+		Serial.print(pm25);
+		Serial.print(" ");
+		Serial.println(pm10);
 	}
 	
 	ts.send(pm25, pm10);
@@ -75,18 +80,25 @@ void do_interval() {
 }
 
 void got_cmd() {
-	if (cmd == "") return;
-  if (cmd.startsWith("ssid,pass=")) mywifi.configure(cmd);
-  
-  Serial.println("Command syntax:");
-  Serial.println("  ssid,pass=yourssid,yourpass");
-  mywifi.print(&sg);
+	if (cmd.startsWith("ssid,password=")) mywifi.configure(cmd);
+
+	Serial.println("Command syntax:");
+	Serial.println("  ssid,password=yourssid,yourpassword");
+	mywifi.print(&sg);
 	cmd = "";
+}
+
+void check_cmd() {
+  while (Serial.available()) {
+    char c = Serial.read();
+    if (c == '\n' || c == '\r') got_cmd();
+    else cmd += String(c);
+  }
 }
 
 void setup() {
 	Serial.begin(115200);
-	dustport.begin(9600, SERIAL_8N1, 13, 5);
+	dustport.begin(9600, SERIAL_8N1, DUSTRX, DUSTTX);
 	pinMode(2, OUTPUT);
 
 	Serial.println("\n\nDust Sensor Box V2.1, 2020/8/19 by Valve God, Kyuho Kim");  
@@ -94,6 +106,8 @@ void setup() {
 
 	mywifi.begin();
 	if (mywifi.connect_ap()) Serial.println("Ready to receive sensor data. ");
+	pm25s.clear();
+	pm10s.clear();
 }
   
 void loop() {
@@ -101,13 +115,15 @@ void loop() {
 
 	if (current > mark) {
 		mark = current + INTERVAL;
-		got_interval = true;
+		do_interval();
 		tick = 1;
 	}
 	if (current > sec_mark) {
 		sec_mark = current + 1000;
-		got_sec = true;
-		missings++;
+		if (missings++ > 5) {
+			oled_waiting_dust(missings);
+			Serial.printf("No data from dust sensor. check wiring.\n");
+		}
 	}
 	while (dustport.available() > 0) {
 		ON;
@@ -116,23 +132,7 @@ void loop() {
 		missings = 0;
 		yield();
 	}
-	if (got_interval) {
-		got_interval = false;
-		do_interval();
-	}
-	if (got_sec) {
-		got_sec = false;
-    
-		if (missings > 5) {
-			oled_waiting_dust(missings);
-			Serial.printf("No data from dust sensor. check wiring.\n");
-		}
-	}
-  
-	while (Serial.available()) {
-		char c = Serial.read();
-		if (c == '\n' || c == '\r') got_cmd();
-		else cmd += String(c);
-	}
+ 
+	check_cmd();
 	yield();
 }

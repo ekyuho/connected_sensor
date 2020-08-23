@@ -40,9 +40,10 @@ String Sogang::send(int pm25, int pm10) {
 	
 	bool ack = false;
 	if (line.startsWith("X-ACK:")) {
+		Serial.println(line);
 		ack = true;
 		String u_s = line.substring(8, 11);
-		String user_s = line.substring(13, 19);
+		String user_s = line.substring(12, 18);
 		if (u_s != "\"u\"") {
 			Serial.println("Format Error: "+ line);
 		} else {

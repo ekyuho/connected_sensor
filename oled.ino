@@ -5,10 +5,11 @@
 // Released to the public domain
 //
 //  https://github.com/squix78/esp8266-oled-ssd1306 
+//  Find it in the Arduino library manager under "ESP8266 and ESP32 Oled Driver for SSD1306 display"
 #include "SSD1306.h"
 #ifdef ESP32
-#define D3 18
-#define D2 19
+#define D3 14  //Data
+#define D2 27  //Clock
 #endif
 SSD1306  display(0x3c, D3, D2);  //Data, Clock
 
@@ -53,14 +54,14 @@ bool m = false;
 int v1[128], v2[128];
 
 void oled_show(int pm25, int pm10, String msg) {
-  display.clear();  
-  display.setFont(ArialMT_Plain_10);
-  if (msg) display.drawString(127-display.getStringWidth(msg), 0, msg);
-  display.drawString(0,0, "pm2.5");
-  display.drawString(48,0, "pm10");  
+  display.clear();   
   display.setFont(ArialMT_Plain_24);
   display.drawString(0,13, String(pm25));
   display.drawString(48,13, String(pm10));
+  display.setFont(ArialMT_Plain_10);
+  display.drawString(0,0, "pm2.5");
+  display.drawString(48,0, "pm10"); 
+  if (msg) display.drawString(127-display.getStringWidth(msg), 0, msg);
 
   int vmax = 0;
   int vmin = 999;

@@ -23,19 +23,19 @@ MyWifi::MyWifi(void) {
 }
 
 void MyWifi::print(Sogang *sg) {
-  Serial.printf( "  ssid,pass=%s,%s (current)for %d@%s\n", ssid, password, sg->user, sg->apikey.c_str());
+  Serial.printf( "  ssid,password=%s,%s (current)for %d@%s\n", ssid, password, sg->user, sg->apikey.c_str());
 }
 
 void MyWifi::begin(void) { 
-	EEPROM.begin(64);
+	EEPROM.begin(128);
 	String cmd = "";
-	for (int i=0; i< 64; i++) {
+	for (int i=0; i< 128; i++) {
 		char c = EEPROM.read(i);
 		if (!c) break;
 		cmd += String(c);
 	}
 	
-	if (!cmd.startsWith("ssid,pass=")) {
+	if (!cmd.startsWith("ssid,password=")) {
 		cmd = "ssid,pass=cookie2,0317137263";
 		MyWifi(cmd);
 	}
@@ -46,7 +46,7 @@ void MyWifi::begin(void) {
 
 void MyWifi::configure(String cmd) {
 	parse(cmd);
-	EEPROM.begin(64);
+	EEPROM.begin(128);
 	for (int i=0; i<cmd.length(); i++)
 		EEPROM.write(i, cmd.charAt(i));
 	EEPROM.write(cmd.length(), 0);
@@ -55,7 +55,7 @@ void MyWifi::configure(String cmd) {
 }
 
 void MyWifi::parse(String cmd) {
-	String ssid_S = cmd.substring(10);
+	String ssid_S = cmd.substring(14);
 	int k = ssid_S.indexOf(",");
 	String password_S = ssid_S.substring(k+1);
 	ssid_S = ssid_S.substring(0,k);
@@ -88,9 +88,11 @@ bool MyWifi::connect_ap() {
     oled_wifi_going(count, ssid, password);
     if (!count--) {
       Serial.println("\nNO WIFI");
-	  oled_no_wifi();
+	    oled_no_wifi();
       return false;
     }
+    extern void check_cmd();
+    check_cmd();
   }
   Serial.printf("............\nConnected as ");
   Serial.println(WiFi.localIP());

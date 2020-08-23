@@ -54,7 +54,7 @@ float RunningMedian::getMedian()
         if (_sorted == false) sort();
         return _as[_cnt/2];
     }
-    return NAN;
+    return -1;
 }
 
 #ifdef RUNNING_MEDIAN_ALL
