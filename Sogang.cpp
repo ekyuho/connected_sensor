@@ -8,7 +8,7 @@
 #include <HTTPClient.h>
 
 Sogang::Sogang(void) {
-    _url = "http://t.damoa.io:8080/add?";  
+    _url = "http://h.damoa.io:8080/add?";  
 	user = 0;
 	apikey = "";
 }

@@ -36,7 +36,7 @@ RunningMedian pm10s = RunningMedian(19);
 
 // "96 OLED
 // D4:RX, D3:Data, D2: CLOCK, 
-// 14:Data, 17:CLock for ESP32
+// 14:Data, 27:CLock for ESP32
 const int INTERVAL = 60000;
 String cmd = "";
 int tick = 1;
