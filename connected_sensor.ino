@@ -91,8 +91,9 @@ void got_cmd() {
 void check_cmd() {
   while (Serial.available()) {
     char c = Serial.read();
-    if (c == '\n' || c == '\r') got_cmd();
-    else cmd += String(c);
+    if (c == '\n') got_cmd();
+    else 
+		if (c != '\r') cmd += String(c);
   }
 }
 

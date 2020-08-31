@@ -51,6 +51,8 @@ void MyWifi::configure(String cmd) {
 		EEPROM.write(i, cmd.charAt(i));
 	EEPROM.write(cmd.length(), 0);
 	EEPROM.commit();
+	
+	Serial.println("restart in 5 seconds...");
 	ESP.restart();
 }
 
